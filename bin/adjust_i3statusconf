@@ -1,0 +1,15 @@
+#! /bin/bash
+
+bat=$(echo /sys/class/power_supply/* | grep -o "BAT.")
+
+if [ ! -f $HOME/.i3status.conf ]; then
+  cp /etc/i3status.conf $HOME/.i3status.conf
+fi
+
+if [ $bat="BAT0" ]; then
+  sed -i 's/battery 1/battery 0/g' $HOME/.i3status.conf
+fi
+
+sed -i 's/.*i3statusconf/#&/' $HOME/.i3/config
+
+exit

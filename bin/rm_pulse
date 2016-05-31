@@ -11,7 +11,7 @@ printf "
 ${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
-#ramove pulseaudio and friends
+#remove pulseaudio and friends
 msg "removing pulsaudio packages"
 sudo pacman -Rsn manjaro-pulse pa-applet pavucontrol || exit 1
 
