@@ -1,11 +1,1 @@
-#! /bin/bash
-
-if [ $HOME/.Xresources -ot $HOME/.gtkrc-2.0 ]; then
-	sed -i "s/Xcursor.theme:.*/Xcursor.theme: $(awk -F= '/gtk-cursor-theme-name=/{print $2}' ~/.gtkrc-2.0)/; s/[\"]//g" $HOME/.Xresources
-	xrdb $HOME/.Xresources
-else
-	sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$(grep "Xcursor.theme" $HOME/.Xresources | cut -d' ' -f2)\"/" $HOME/.gtkrc-2.0
-fi
-
-exit
-
+/usr/bin/setcursor

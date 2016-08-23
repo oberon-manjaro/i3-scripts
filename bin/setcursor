@@ -1,0 +1,26 @@
+#! /bin/bash
+
+gtk2=$HOME/.gtkrc-2.0
+xr=$HOME/.Xresources
+
+cursor_gtk2=$(grep "cursor-theme-name" $gtk2 | cut -d'"' -f2)
+cursor_xr=$(grep "Xcursor.theme" $xr | cut -d' ' -f2)
+
+if [ -z "$1" ]; then
+	if [ $gtk2 -nt $xr ]; then
+		cursor=$cursor_gtk2
+	else
+		cursor=$cursor_xr
+	fi
+else
+	cursor=$1
+fi
+
+sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/; s/[\"]//g" $xr
+sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$cursor\"/" $gtk2
+[[ -f /usr/bin/gconftool-2 ]] && gconftool-2 --type string -s /desktop/gnome/peripherals/mouse/cursor $cursor
+[[ -f /usr/bin/gsettings ]] && gsettings set org.gnome.desktop.interface cursor-theme $cursor
+[[ -f /usr/bin/xrdb ]] && xrdb $xr
+
+exit
+
