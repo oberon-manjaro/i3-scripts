@@ -1,23 +1,28 @@
 #! /bin/bash
 
+# config files
 gtk2=$HOME/.gtkrc-2.0
+gtk3=$HOME/.config/gtk-3.0/settings.ini
 xr=$HOME/.Xresources
 
+# cursor-theme entries
 cursor_gtk2=$(grep "cursor-theme-name" $gtk2 | cut -d'"' -f2)
+cursor_gtk3=$(grep "cursor-theme-name" $gtk3 | cut -d'=' -f2)
 cursor_xr=$(grep "Xcursor.theme" $xr | cut -d' ' -f2)
 
-if [ -z "$1" ]; then
-	if [ $gtk2 -nt $xr ]; then
-		cursor=$cursor_gtk2
-	else
-		cursor=$cursor_xr
-	fi
-else
-	cursor=$1
+cursor=$1
+
+# find config last modified
+if [ -z $1 ]; then
+	cursor=$cursor_xr; newest=$xr
+	[[ $gtk2 -nt $xr ]] && cursor=$cursor_gtk2 && newest=$gtk2
+	[[ $gtk3 -nt $newest ]] && cursor=$cursor_gtk3
 fi
 
+echo "setting cursortheme \"$cursor\""
 sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/; s/[\"]//g" $xr
 sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$cursor\"/" $gtk2
+sed -i "s/cursor-theme-name=.*/cursor-theme-name=$cursor/" $gtk3
 [[ -f /usr/bin/gconftool-2 ]] && gconftool-2 --type string -s /desktop/gnome/peripherals/mouse/cursor $cursor
 [[ -f /usr/bin/gsettings ]] && gsettings set org.gnome.desktop.interface cursor-theme $cursor
 [[ -f /usr/bin/xrdb ]] && xrdb $xr
