@@ -3,12 +3,11 @@
 i3configfile=$HOME/.i3/config
 
 msg() {
-ALL_OFF="\e[1;0m"
-BOLD="\e[1;1m"
-GREEN="${BOLD}\e[1;32m"
-local mesg=$1; shift
-printf "
-${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
+  ALL_OFF="\e[1;0m"
+  BOLD="\e[1;1m"
+  GREEN="${BOLD}\e[1;32m"
+  local mesg=$1; shift
+  printf "\n${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}\n" "$@" >&2
 }
 
 #remove pulseaudio and friends
@@ -28,3 +27,4 @@ sed -i 's/bindsym \$mod+Ctrl+m exec pavucontrol/#bindsym \$mod+Ctrl+m exec pavuc
 msg "Pulseaudio has been removed from your system. Please re-log now to continue using Alsa only."
 
 exit 0
+
