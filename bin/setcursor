@@ -25,6 +25,6 @@ sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$cursor\"/" $gtk2
 sed -i "s/cursor-theme-name=.*/cursor-theme-name=$cursor/" $gtk3 &>/dev/null
 [[ -f /usr/bin/gconftool-2 ]] && gconftool-2 --type string -s /desktop/gnome/peripherals/mouse/cursor $cursor
 [[ -f /usr/bin/gsettings ]] && gsettings set org.gnome.desktop.interface cursor-theme $cursor
-[[ -f /usr/bin/xrdb ]] && xrdb -merge $xr
+xrdb -merge -I$HOME ~/.Xresources
 
 exit
