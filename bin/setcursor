@@ -14,15 +14,15 @@ cursor=$1
 
 # find config last modified
 if [ -z $1 ]; then
-	cursor=$cursor_xr; newest=$xr
-	[[ $gtk2 -nt $xr ]] && cursor=$cursor_gtk2 && newest=$gtk2
-	[[ $gtk3 -nt $newest ]] && cursor=$cursor_gtk3
+	cursor=$cursor_gtk2; newest=$gtk2
+	[[ $xr -nt $gtk2 ]] && [[ ! -z $cursor_xr ]] && cursor=$cursor_xr && newest=$xr
+	[[ $gtk3 -nt $newest ]] && [[ ! -z $cursor_gtk3 ]] && cursor=$cursor_gtk3
 fi
 
 echo "setting cursortheme \"$cursor\""
-sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/; s/[\"]//g" $xr
+sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/; s/[\"]//g" $xr &>/dev/null
 sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$cursor\"/" $gtk2
-sed -i "s/cursor-theme-name=.*/cursor-theme-name=$cursor/" $gtk3
+sed -i "s/cursor-theme-name=.*/cursor-theme-name=$cursor/" $gtk3 &>/dev/null
 [[ -f /usr/bin/gconftool-2 ]] && gconftool-2 --type string -s /desktop/gnome/peripherals/mouse/cursor $cursor
 [[ -f /usr/bin/gsettings ]] && gsettings set org.gnome.desktop.interface cursor-theme $cursor
 [[ -f /usr/bin/xrdb ]] && xrdb -merge $xr
