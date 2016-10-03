@@ -5,5 +5,5 @@
 if [ ! -f "/usr/bin/xflock4" ]; then
   blurlock
 else
-  /usr/bin/xflock4/xflock4
+  /usr/bin/xflock4
 fi
