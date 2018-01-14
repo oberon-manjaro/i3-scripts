@@ -11,7 +11,7 @@ gtk3=$HOME/.config/gtk-3.0/settings.ini
 default=share/icons/default/index.theme
 glob_default=/usr/$default
 user_default=$HOME/.local/$default
-[[ -e $glob_default ]] && [[ ! -e $user_default ]] && cp $glob_default $user_default 
+[[ -e $glob_default ]] && [[ ! -e $user_default ]] && install -D $glob_default $user_default 
 
 # cursor-theme entries
 cursor_gtk2=$(grep "cursor-theme-name" $gtk2 | cut -d'"' -f2)
