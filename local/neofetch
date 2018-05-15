@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -e /usr/bin/neofetch ]]; then
+    neofetch
+elif [[ -e /usr/bin/screenfetch ]]; then
+    echo "'neofetch' is not installed."
+    sleep 2
+    clear
+    echo "using 'screenfetch instead."
+    sleep 2
+    clear
+    screenfetch
+fi
+
+exit 0
