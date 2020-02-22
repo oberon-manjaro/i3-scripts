@@ -28,7 +28,7 @@ if [ -z $1 ]; then
 fi
 
 # Strip any quotes from cursor string
-echo $cursor | sed -e 's/"//g'
+cursor=$(echo $cursor | sed -e 's/"//g')
 
 # set theme in all config files
 echo "setting cursortheme \"$cursor\""
