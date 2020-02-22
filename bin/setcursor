@@ -27,10 +27,13 @@ if [ -z $1 ]; then
 	[[ $gtk3 -nt $newest ]] && [[ ! -z $cursor_gtk3 ]] && cursor=$cursor_gtk3
 fi
 
+# Strip any quotes from cursor string
+echo $cursor | sed -e 's/"//g'
+
 # set theme in all config files
 echo "setting cursortheme \"$cursor\""
 [[ "$cursor" != "$cursor_xr" ]] && \
-	sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/; s/[\"]//g" $xr &>/dev/null && \
+	sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/g" $xr &>/dev/null && \
 	xrdb -merge -I$HOME ~/.Xresources
 [[ "$cursor" != "$cursor_gtk2" ]] && \
 	sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$cursor\"/" $gtk2
