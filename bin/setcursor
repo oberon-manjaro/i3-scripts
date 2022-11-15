@@ -6,6 +6,9 @@
 gtk2=${GTK2_RC_FILES:-$HOME/.gtkrc-2.0}
 gtk3=$HOME/.config/gtk-3.0/settings.ini
 [[ -e $HOME/.extend.Xresources ]] && xr=$HOME/.extend.Xresources || xr=$HOME/.Xresources
+[[ -e $HOME/.xsettingsd ]] && xs=$HOME/.xsettingsd
+[[ -z "$xs" ]] && [[ -e ${XDG_CONFIG_DIR:-$HOME/.config}/xsettingsd/xsettingsd.conf ]] && \
+	xs=${XDG_CONFIG_DIR:-$HOME/.config}/xsettingsd/xsettingsd.conf
 
 # we'll have to override libxcursor's default
 default=share/icons/default/index.theme
@@ -17,6 +20,7 @@ user_default=$HOME/.local/$default
 cursor_gtk2=$(grep "cursor-theme-name" $gtk2 | cut -d'"' -f2)
 cursor_gtk3=$(grep "cursor-theme-name" $gtk3 | cut -d'=' -f2)
 cursor_xr=$(grep "Xcursor.theme" $xr | cut -d' ' -f2)
+cursor_xs=$(grep "Gtk/CursorThemeName" $xs | cut -d' ' -f2 | sed -e 's/"//g')
 
 cursor=$1
 
@@ -35,6 +39,9 @@ echo "setting cursortheme \"$cursor\""
 [[ "$cursor" != "$cursor_xr" ]] && \
 	sed -i "s/Xcursor.theme:.*/Xcursor.theme: $cursor/g" $xr &>/dev/null && \
 	xrdb -merge -I$HOME ~/.Xresources
+[[ -n "$xs" ]] && [[ "$cursor" != "$cursor_xs" ]] && \
+	sed -i "s#Gtk/CursorThemeName .*#Gtk/CursorThemeName \"$cursor\"#g" $xs && \
+	killall -HUP xsettingsd
 [[ "$cursor" != "$cursor_gtk2" ]] && \
 	sed -i "s/cursor-theme-name=\".*\"/cursor-theme-name=\"$cursor\"/" $gtk2
 [[ "$cursor" != "$cursor_gtk3" ]] && \
